@@ -34,6 +34,39 @@ const posts = [
 const app = express();
 app.use(express.json());
 
+app.post('/post', (req, res) => {
+  const {title, content, userId} = req.body;
+  // 예외처리
+  const existUserId = users.find((user) => (user.id == userId));
+  if (!existUserId) {
+    res.status(400).send(
+      `there is no matched userId
+http statusCode: ${res.statusCode}
+    `);
+    return;
+  }
+  if (!title || !content || !userId) {
+    res.status(400).send(
+      `plz send detail request for {title, content, userId}
+http statusCode: ${res.statusCode}
+    `);
+    return;
+  }
+
+  posts.push({
+    id: users.length + 1,
+    title,
+    content,
+    userId
+  });
+
+  res.send({ message:
+    `post Created: ${title}
+http statusCode: ${res.statusCode}
+    `
+  });
+});
+
 app.post('/user', (req, res) => {
   const {name, email, pwd} = req.body;
 
